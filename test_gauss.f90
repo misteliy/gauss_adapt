@@ -1,7 +1,7 @@
 	program test_gauss
 	implicit none
 
-	integer,parameter                  :: dp=8,n=2,maxiter=20000
+	integer,parameter                  :: dp=8,n=2,maxiter=1000
 	character(60)                      :: task
 	real(kind=dp)                      :: f,c_t,x(n),eta(n),m(n),eps
 	real(kind=dp)                      :: Q(n,n),r,xmin(n),fmin
@@ -9,7 +9,7 @@
 	logical                            :: iprint
 
 	task='start'
-	eps=1e-6
+	eps=1e-5
 	x=1._dp
 	counter=0
 	iprint = .true.
@@ -112,27 +112,19 @@
             eig_val=sqrt(eig_val)
 !            print *,'before eigenvalue multi',dQ
             do i=1,n; dQ(:,i)=dQ(:,i)*sqrt(eig_val(i)); enddo
-
             !test=dq(1,1)*dq(2,2)-dq(1,2)*dq(2,1)
             !print *,test,'test first Qdet'
-           
             print *,'dQ half',dQ
-
             !dq= matmul(dQ,transpose(dq))
-            
-            call DGEMM('n','t',n,n,n,1.0d0,dQ,n,dQ,n,0.0d0,temp,n)
+            !call DGEMM('n','t',n,n,n,1.0d0,dQ,n,dQ,n,0.0d0,temp,n)
+            call DSYRK('l','n',n,n,1._dp,dQ,n,0._dp,temp,n)
             dQ=temp
-            !call DSYRK('l','n',n,n,1._dp,dQ,n,0._dp,temp,n)
-
             !do i=1,n
             !   do j=1,i
             !      dq(i,j)=dq(j,i)
             !   enddo
             !enddo
-            
-             
             print *,'dQ',dQ
-
             !call DGEMM('n','t',n,n,n,1._dp,Id,n,dQ,n,0._dp,Id,n) 
             !print *,'Id',Id
             !print *,'dQ',dQ
@@ -148,8 +140,8 @@
             print *,test,'testQdet'
             print *,'old Q',Q
 !--------------------------------update Q---------------------------------------
-            !call DSYMM('r','l',n,n,1._dp,dQ,n,Q,n,0._dp,Q,n)
-            call DGEMM('n','n',n,n,n,1.0d0,Q,n,dQ,n,0.0d0,temp,n)
+            call DSYMM('r','l',n,n,1._dp,dQ,n,Q,n,0._dp,temp,n)
+            !call DGEMM('n','n',n,n,n,1.0d0,Q,n,dQ,n,0.0d0,temp,n)
 			!Q=matmul(Q,dQ)
             Q=temp
             print *,'final Q',Q
