@@ -14,7 +14,7 @@
 	counter=0
 	iprint = .true.
 	
-	if (iprint) print *,'*********************start************************'
+	if (iprint) print *,'**********************start************************'
 	do i = 1,maxiter
 		if (task(1:5).eq.'new_x') call fun(x,n,f)
 		if (task.eq.'new_x_accepted') then
