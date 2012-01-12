@@ -1,7 +1,7 @@
 	program test_gauss
 	implicit none
 
-	integer,parameter                  :: dp=8,n=2,maxiter=1000
+	integer,parameter                  :: dp=8,n=2,maxiter=1000000
 	character(60)                      :: task
 	real(kind=dp)                      :: f,c_t,x(n),eta(n),m(n),eps
 	real(kind=dp)                      :: Q(n,n),r,xmin(n),fmin
@@ -32,6 +32,7 @@
 			print *,'xmin',xmin,'fmin',fmin
 			print *,'r',r
 			print *,'Q',Q
+            print *,'detQ',q(1,1)*q(2,2)-q(1,2)*q(2,1)
 			print *,'C',matmul(r*Q,transpose(r*Q))
 			print *,'---------------------------------'
 		endif
@@ -55,9 +56,9 @@
 	implicit none
 	integer,intent(in)   :: n
 	real(kind=dp) :: x(n),a,f
-	f = (x(1)-1._dp)**2 + (x(2)-3._dp)**2
-	!a=sqrt(2._dp)
-	!f = 100*(x(2)-x(1)**2)**2+(a-x(1))
+	!f = (x(1)-4._dp)**2 + (x(2)-3._dp)**2
+	a=sqrt(2._dp)
+	f = 100*(x(2)-x(1)**2)**2+(a-x(1))
 	end subroutine fun
 !-----------------------Gaussian Adaption Algorithm-----------------------------
 	subroutine GaussAdapt(n,x,eta,f,m,Q,r,c_t,xmin,fmin,task)
@@ -105,7 +106,7 @@
 			if (info.ne.0) task='stop_eigendecomp'
             if (any(isnan(eig_val))) task='stop'
             if (any(eig_val.eq.0)) task='stop' 
-            print *,'eig_val',eig_val 
+!            print *,'eig_val',eig_val 
 			detQ=product(eig_val)
             detQ=detQ**(1.d0/n)
             eig_val=eig_val/detQ
@@ -114,7 +115,7 @@
             do i=1,n; dQ(:,i)=dQ(:,i)*sqrt(eig_val(i)); enddo
             !test=dq(1,1)*dq(2,2)-dq(1,2)*dq(2,1)
             !print *,test,'test first Qdet'
-            print *,'dQ half',dQ
+!            print *,'dQ half',dQ
             !dq= matmul(dQ,transpose(dq))
             !call DGEMM('n','t',n,n,n,1.0d0,dQ,n,dQ,n,0.0d0,temp,n)
             call DSYRK('l','n',n,n,1._dp,dQ,n,0._dp,temp,n)
@@ -124,7 +125,7 @@
             !      dq(i,j)=dq(j,i)
             !   enddo
             !enddo
-            print *,'dQ',dQ
+!            print *,'dQ',dQ
             !call DGEMM('n','t',n,n,n,1._dp,Id,n,dQ,n,0._dp,Id,n) 
             !print *,'Id',Id
             !print *,'dQ',dQ
@@ -136,17 +137,17 @@
 			!detQ=detQ**(1D+0/n)
 			!dQ=dQ/detQ
 			!print *,detQ,'detQ'
-            test=dq(1,1)*dq(2,2)-dq(1,2)**2
-            print *,test,'testQdet'
-            print *,'old Q',Q
+!            test=dq(1,1)*dq(2,2)-dq(1,2)**2
+!            print *,test,'testQdet'
+!            print *,'old Q',Q
 !--------------------------------update Q---------------------------------------
             call DSYMM('r','l',n,n,1._dp,dQ,n,Q,n,0._dp,temp,n)
             !call DGEMM('n','n',n,n,n,1.0d0,Q,n,dQ,n,0.0d0,temp,n)
 			!Q=matmul(Q,dQ)
             Q=temp
-            print *,'final Q',Q
-            test=q(1,1)*q(2,2)-q(1,2)*q(2,1)
-            print *,test,'test final Q det'
+!            print *,'final Q',Q
+!            test=q(1,1)*q(2,2)-q(1,2)*q(2,1)
+!            print *,test,'test final Q det'
 		else
 !---------------rejected lower step size dont adopt cov. + mean-----------------
             !test=q(1,1)*q(2,2)-q(1,2)*q(2,1)
