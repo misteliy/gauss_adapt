@@ -56,9 +56,9 @@
 	implicit none
 	integer,intent(in)   :: n
 	real(kind=dp) :: x(n),a,f
-	!f = (x(1)-4._dp)**2 + (x(2)-3._dp)**2
-	a=sqrt(2._dp)
-	f = 100*(x(2)-x(1)**2)**2+(a-x(1))
+	f = (x(1)-4._dp)**2 + (x(2)-3._dp)**2
+	!a=sqrt(2._dp)
+	!f = 100*(x(2)-x(1)**2)**2+(a-x(1))
 	end subroutine fun
 !-----------------------Gaussian Adaption Algorithm-----------------------------
 	subroutine GaussAdapt(n,x,eta,f,m,Q,r,c_t,xmin,fmin,task)
