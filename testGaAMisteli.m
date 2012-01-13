@@ -4,9 +4,10 @@ close all
 % Function
 funName = 'fmisteli'
 
-N = 2;
+N = 10;
 numIter = 1;
 MaxIter = N*1.5e2;
+MaxIter = 10000;
 
 % number of iterations
 for j=1:numIter
@@ -19,7 +20,7 @@ for j=1:numIter
     inopts.SavingModulo=1;
     
     inopts.r = 1;
-    inopts.StopFitness = 1e-6;
+    inopts.StopFitness = 1e-9;
     
     inopts.MaxIter=MaxIter;
     inopts.Display = 'off';

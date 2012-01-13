@@ -125,7 +125,6 @@ REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
             r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
 
 !     Generate P = (u,v) uniform in rectangle enclosing acceptance region
-
 DO
   CALL RANDOM_NUMBER(u)
   CALL RANDOM_NUMBER(v)
@@ -1592,6 +1591,23 @@ DEALLOCATE( seed )
 
 RETURN
 END SUBROUTINE seed_random_number
+
+
+SUBROUTINE init_random_seed()
+            INTEGER :: i, n, clock
+            INTEGER, DIMENSION(:), ALLOCATABLE :: seed
+          
+            CALL RANDOM_SEED(size = n)
+            ALLOCATE(seed(n))
+          
+            CALL SYSTEM_CLOCK(COUNT=clock)
+          
+            seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+            CALL RANDOM_SEED(PUT = seed)
+          
+            DEALLOCATE(seed)
+END SUBROUTINE
+     
 
 END MODULE random
 
